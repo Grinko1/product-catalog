@@ -1,0 +1,47 @@
+.ProductDetail {
+  display: flex;
+  width: 80%;
+  margin: 50px auto;
+  gap: 50px;
+  .ProductDetailImg {
+    img {
+      width: 400px;
+      height: 500px;
+    object-fit: contain;
+    }
+  }
+  .ProductDetailInfo {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    margin-top: 150px;
+    gap: 20px;
+    .Description {
+      p {
+        margin: 10px 0;
+      }
+    }
+
+    h1 {
+      text-align: center;
+    }
+    span {
+      font-size: 12px;
+      text-align: end;
+    }
+    .Price {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+    .ProductBtns{
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      span{
+        font-size: 17px;
+      }
+    }
+  }
+}

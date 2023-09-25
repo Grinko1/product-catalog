@@ -1,0 +1,23 @@
+.Header{
+    background-color: rgb(59 59 82);
+    height: 70px;
+    margin-bottom: 40px;
+    color:#fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px;
+    .HeaderLogo{
+        font-size: 30px;
+    }
+    .LeftLinks{
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        button{
+            background: transparent;
+            color: #fff;
+            border: none;
+        }
+    }
+}
