@@ -18,7 +18,7 @@ export interface IFormInput {
 
 interface ProductFormProps {
   product: Product;
-  onChange: (value:  any) => void;
+  onChange: (value: any) => void;
   submit: () => void;
   action: string;
 }
@@ -57,13 +57,16 @@ const ProductForm = (props: ProductFormProps) => {
 
   const changePriceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    onChange({ ...product, price: Number(inputValue) });
+    const allowedPattern = /^[0-9.]*$/;
+    if (allowedPattern.test(inputValue)) {
+      onChange({ ...product, price: Number(inputValue) });
+    }
   };
   const handleCountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
     const updatedProduct = { ...product };
     if (updatedProduct.rating) {
-      updatedProduct.rating = { ...updatedProduct.rating }; 
+      updatedProduct.rating = { ...updatedProduct.rating };
       updatedProduct!.rating.count = Number(inputValue);
     }
 
@@ -125,7 +128,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Price'
           step='0.01'
           aria-invalid={!!errors.price}
-          value={product?.price ? product?.price :''}
+          value={product?.price ? product?.price : ''}
           onChange={changePriceInput}
         />
         <span className={style.FormError} role='alert'>
@@ -139,7 +142,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Count'
           step='1'
           aria-invalid={!!errors.count}
-          value={product?.rating?.count ?product?.rating?.count  : '' }
+          value={product?.rating?.count ? product?.rating?.count : ''}
           onChange={handleCountInput}
         />
         <span className={style.FormError} role='alert'>

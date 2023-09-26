@@ -1,14 +1,15 @@
 import ProductForm from '../components/product-form/ProductForm';
 import { memo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGetCategoriesQuery } from 'services/categories/categoriesApi';
 import { useAddProductMutation } from 'services/products/productsApi';
 import { Product } from 'types';
 import generateUniqId from 'utills/generateUniqId';
 
-
-const uniqId = generateUniqId(20);// fn for generate uniq id
+const uniqId = generateUniqId(20); // fn for generate uniq id
 
 const CreateProduct = () => {
+  const { data, error, isLoading } = useGetCategoriesQuery(null);
   const [product, setProduct] = useState<Product>({
     id: uniqId(),
     title: '',
@@ -22,8 +23,14 @@ const CreateProduct = () => {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      setProduct({ ...product, category: data[0] });
+    }
+  }, [data]);
   const navigate = useNavigate();
   const [addProduct, result] = useAddProductMutation();
+
   useEffect(() => {
     if (result.isSuccess) {
       navigate(`/`);

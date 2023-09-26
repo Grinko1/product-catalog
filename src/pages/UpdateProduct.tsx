@@ -18,17 +18,17 @@ const UpdateProduct = () => {
     if (data) {
       setProduct(data);
     } else {
-      setProduct(location.state); // for get the local created product
+      setProduct(location.state as Product); // for get the local created product
     }
   }, []);
 
   const navigate = useNavigate();
 
-
+// console.log(product, location.state)
 
   useEffect(() => {
     if (result.isSuccess) {
-      navigate(`/product/${id}`);
+      navigate(`/product/${id}` ,{state:product});
     }
   }, [result.isSuccess]);
 

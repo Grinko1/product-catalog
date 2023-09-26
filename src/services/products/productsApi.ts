@@ -46,7 +46,7 @@ export const productsApi = createApi({
         }
       },
     }),
-    addProduct: builder.mutation<Product, Partial<Product>>({
+    addProduct: builder.mutation<Product, Product>({
       query: (data) => ({
         url: `products`,
         method: 'POST',
@@ -55,9 +55,10 @@ export const productsApi = createApi({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data: createdProject } = await queryFulfilled;
+          console.log(createdProject, 'createdProject', args, 'args')
           dispatch(
             productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
-              draft?.push(createdProject);
+              draft?.push(args);
             }),
           );
         } catch (error) {
