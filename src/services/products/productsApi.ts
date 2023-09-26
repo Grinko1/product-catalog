@@ -8,31 +8,63 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     getAllProducts: builder.query<Product[], null>({
       query: () => `products`,
-      providesTags: (result) =>
-        result
-          ? [
-              ...result?.map(({ id }) => ({ type: 'Products' as const, id })),
-              { type: 'Products', id: 'LIST' },
-            ]
-          : [{ type: 'Products', id: 'LIST' }],
+      providesTags: ['Products'],
     }),
 
     getProductById: builder.query<Product, string>({
       query: (id) => `products/${id}`,
     }),
     updateProduct: builder.mutation<Product, Partial<Product>>({
-      query: ({ id, ...patch }) => ({
+      query: ({ id, ...data }) => ({
         url: `products/${id}`,
         method: 'PATCH',
-        body: patch,
+        body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data: updatedProduct } = await queryFulfilled;
+          dispatch(
+            //@ts-ignore
+            productsApi.util.updateQueryData('getProductById', args!.id.toString(), (draft) => {
+              console.log(JSON.stringify(draft))
+              // return updatedProduct
+              return Object.assign(draft, updatedProduct)
+            }),
+          );
+          dispatch(
+            productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
+    
+              return draft.map((item) => {
+                if(item.id === args.id){
+                  return updatedProduct
+                }
+                return item
+              })
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     addProduct: builder.mutation<NewProduct, Partial<Product>>({
-      query: (body) => ({
+      query: (data) => ({
         url: `products`,
         method: 'POST',
-        body,
+        body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data: createdProject } = await queryFulfilled;
+          dispatch(
+            productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
+              draft?.push(createdProject);
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     deletePost: builder.mutation<{ id: number }, number>({
       query(id) {
@@ -40,6 +72,18 @@ export const productsApi = createApi({
           url: `products/${id}`,
           method: 'DELETE',
         };
+      },
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          dispatch(
+            productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
+              return draft.filter((project) => project.id !== args);
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
       },
     }),
   }),

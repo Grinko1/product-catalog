@@ -5,11 +5,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProductByIdQuery, useUpdateProductMutation } from 'services/products/productsApi';
 import { Product } from 'types';
 
+
 const UpdateProduct = () => {
   const { id } = useParams();
   const { data, isLoading, error } = useGetProductByIdQuery(id || '1');
   const [updateProduct, result] = useUpdateProductMutation();
+
+
+ 
   const [product, setProduct] = useState<Partial<Product> | undefined>(data);
+  console.log(product);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,10 +29,12 @@ const UpdateProduct = () => {
 
   const update = () => {
     updateProduct({ id: Number(id), ...product });
+  
+
   };
 
   if (isLoading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   if (error) {

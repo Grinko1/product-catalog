@@ -13,6 +13,7 @@ export interface IFormInput {
   price: number;
   image: string;
   category: string;
+  count:number
 }
 
 interface ProductFormProps {
@@ -28,12 +29,13 @@ const schema = yup.object().shape({
   description: yup.string().required(),
   category: yup.string().required(),
   image: yup.string().required(),
+  count: yup.number().min(1).required()
 });
 
 const ProductForm = (props: ProductFormProps) => {
   const { product, onChange, submit, action } = props;
   const { data, error, isLoading } = useGetCategoriesQuery(null);
-
+console.log(product,'product')
   const {
     register,
     handleSubmit,
@@ -59,6 +61,12 @@ const ProductForm = (props: ProductFormProps) => {
     // const numericValue = inputValue.replace(/^\d*\,?\d*$/, '');
     // onChange({ ...product, price: Number(numericValue) });
      onChange({ ...product, price: Number(inputValue) });
+  }
+  const handleCountInput = (e: React.ChangeEvent<HTMLInputElement>)=>{
+    let inputValue = e.target.value;
+    const updatedProduct = {...product}
+     updatedProduct!.rating!.count = parseInt(inputValue, 10);
+    onChange(updatedProduct)
   }
   if (error) {
     return <div>Error: Failed to create new product</div>;
@@ -119,13 +127,28 @@ const ProductForm = (props: ProductFormProps) => {
         <span className={style.FormError} role='alert'>
           {errors.price?.message && '*' + `${errors.price?.message}`}
         </span>
+        <label>Count in stock</label>
+        <input
+          {...register('count')}
+          type='number'
+          name='count'
+          placeholder='Count'
+           step="1"
+          aria-invalid={!!errors.count}
+          value={product?.rating?.count}
+          onChange={handleCountInput}
+        />
+        <span className={style.FormError} role='alert'>
+          {errors.count?.message && '*' + `${errors.count?.message}`}
+        </span>
         <label>Category</label>
         <select
-          value={product?.category}
+          value={product?.category || ''}
           {...register('category')}
           onChange={(e) =>
             onChange({ ...product, category: (e.target as HTMLSelectElement).value })
           }>
+   
           {!isLoading &&
             data!.map((item) => (
               <option key={item} value={item}>
