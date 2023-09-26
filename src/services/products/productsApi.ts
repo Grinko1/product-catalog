@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { NewProduct, Product } from 'types';
+import {  Product } from 'types';
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
@@ -14,32 +14,32 @@ export const productsApi = createApi({
     getProductById: builder.query<Product, string>({
       query: (id) => `products/${id}`,
     }),
-    updateProduct: builder.mutation<Product, Partial<Product>>({
-      query: ({ id, ...data }) => ({
-        url: `products/${id}`,
+    updateProduct: builder.mutation<Product, Product>({
+      query: (data ) => ({
+        url: `products/${data.id}`,
         method: 'PATCH',
         body: data,
       }),
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        console.log(args)
         try {
           const { data: updatedProduct } = await queryFulfilled;
+          const id = args!.id!.toString()
           dispatch(
-            //@ts-ignore
-            productsApi.util.updateQueryData('getProductById', args!.id.toString(), (draft) => {
-              console.log(JSON.stringify(draft))
-              // return updatedProduct
-              return Object.assign(draft, updatedProduct)
+
+            productsApi.util.updateQueryData('getProductById', id, (draft) => {
+              return Object.assign(draft, args);
             }),
           );
           dispatch(
             productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
-    
+              console.log(updatedProduct, 'updatedProduct');
               return draft.map((item) => {
-                if(item.id === args.id){
-                  return updatedProduct
+                if (item.id === args.id) {
+                  return args;
                 }
-                return item
-              })
+                return item;
+              });
             }),
           );
         } catch (error) {
@@ -47,7 +47,7 @@ export const productsApi = createApi({
         }
       },
     }),
-    addProduct: builder.mutation<NewProduct, Partial<Product>>({
+    addProduct: builder.mutation<Product, Partial<Product>>({
       query: (data) => ({
         url: `products`,
         method: 'POST',

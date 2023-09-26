@@ -1,24 +1,35 @@
 import ProductDetail from '../components/product-detail/ProductDetail';
-import { memo, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { memo, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Product } from 'types';
 import { useDeletePostMutation, useGetProductByIdQuery } from '../services/products/productsApi';
 import Loader from '../components/loader/Loader';
+
 
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetProductByIdQuery(id || '1');
+  const [product, setProduct] = useState<Product >();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (data) {
+      setProduct(data);
+    } else {
+      setProduct(location.state); // for get the local created product
+    }
+  }, []);
+
   const [deletePost, result] = useDeletePostMutation();
 
-  useEffect(()=>{
-  if (result.status === 'fulfilled') {
+  useEffect(() => {
+    if (result.status === 'fulfilled') {
       navigate('/');
     }
-  },[result.status])
+  }, [result.status]);
   const handleDeleteProduct = () => {
     deletePost(Number(id));
-  
   };
   if (isLoading || result.isLoading) {
     return <Loader />;
@@ -28,7 +39,7 @@ const Product = () => {
     return <div>Error: Failed to load</div>;
   }
 
-  return <div>{data && <ProductDetail product={data} onDelete={handleDeleteProduct} />}</div>;
+  return <div>{product && <ProductDetail product={product} onDelete={handleDeleteProduct} />}</div>;
 };
 
 export default memo(Product);

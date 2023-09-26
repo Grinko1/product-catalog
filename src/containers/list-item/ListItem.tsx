@@ -11,7 +11,7 @@ const ProductItem = (props: ProductItemProps) => {
   const { product } = props;
 
   return (
-    <Link to={`/product/${product.id}`} className={style.Product}>
+    <Link to={`/product/${product.id}`} state={product} className={style.Product}>
       <img src={product.image} alt='' />
       <div className={style.ProductDesc}>
         <p className={style.Title}>{product.title}</p>

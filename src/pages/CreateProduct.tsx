@@ -2,24 +2,24 @@ import ProductForm from '../components/product-form/ProductForm';
 import { memo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAddProductMutation } from 'services/products/productsApi';
-import { NewProduct } from 'types';
+import { Product } from 'types';
 import generateUniqId from 'utills/generateUniqId';
 
 
-const uniqId = generateUniqId(20)
+const uniqId = generateUniqId(20);// fn for generate uniq id
+
 const CreateProduct = () => {
-  console.log(uniqId(), 'id')
-  const [product, setProduct] = useState<NewProduct>({
-    id:uniqId(),
+  const [product, setProduct] = useState<Product>({
+    id: uniqId(),
     title: '',
     description: '',
     price: 1,
     image: '',
     category: '',
-    rating:{
-      count:0,
-      rate:0,
-    }
+    rating: {
+      count: 0,
+      rate: 0,
+    },
   });
 
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ const CreateProduct = () => {
       navigate(`/`);
     }
   }, [result.isSuccess]);
+
   const create = () => {
     addProduct(product);
   };

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import style from './ProductForm.module.scss';
 import { memo } from 'react';
-import { NewProduct, Product } from 'types';
+import { Product } from 'types';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetCategoriesQuery } from '../../services/categories/categoriesApi';
+import Loader from 'components/loader/Loader';
 
 export interface IFormInput {
   title: string;
@@ -13,12 +13,12 @@ export interface IFormInput {
   price: number;
   image: string;
   category: string;
-  count:number
+  count: number;
 }
 
 interface ProductFormProps {
-  product?: NewProduct;
-  onChange: (value: NewProduct | Product) => void;
+  product: Product;
+  onChange: (value:  any) => void;
   submit: () => void;
   action: string;
 }
@@ -29,13 +29,13 @@ const schema = yup.object().shape({
   description: yup.string().required(),
   category: yup.string().required(),
   image: yup.string().required(),
-  count: yup.number().min(1).required()
+  count: yup.number().min(1).required(),
 });
 
 const ProductForm = (props: ProductFormProps) => {
   const { product, onChange, submit, action } = props;
   const { data, error, isLoading } = useGetCategoriesQuery(null);
-console.log(product,'product')
+
   const {
     register,
     handleSubmit,
@@ -56,20 +56,27 @@ console.log(product,'product')
     onChange({ ...product, [fieldName]: fieldValue });
   };
 
-  const changePriceInput = (e: React.ChangeEvent<HTMLInputElement>) =>{
-      let inputValue = e.target.value;
+  const changePriceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let inputValue = e.target.value;
     // const numericValue = inputValue.replace(/^\d*\,?\d*$/, '');
     // onChange({ ...product, price: Number(numericValue) });
-     onChange({ ...product, price: Number(inputValue) });
-  }
-  const handleCountInput = (e: React.ChangeEvent<HTMLInputElement>)=>{
+    onChange({ ...product, price: Number(inputValue) });
+  };
+  const handleCountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    const updatedProduct = {...product}
-     updatedProduct!.rating!.count = parseInt(inputValue, 10);
-    onChange(updatedProduct)
-  }
+    const updatedProduct = { ...product };
+    if (updatedProduct.rating) {
+      updatedProduct.rating = { ...updatedProduct.rating }; 
+      updatedProduct!.rating.count = Number(inputValue);
+    }
+
+    onChange(updatedProduct);
+  };
   if (error) {
     return <div>Error: Failed to create new product</div>;
+  }
+  if (isLoading) {
+    return <Loader />;
   }
   return (
     <div>
@@ -119,7 +126,7 @@ console.log(product,'product')
           type='number'
           name='price'
           placeholder='Price'
-           step="0.01"
+          step='0.01'
           aria-invalid={!!errors.price}
           value={product?.price}
           onChange={changePriceInput}
@@ -133,7 +140,7 @@ console.log(product,'product')
           type='number'
           name='count'
           placeholder='Count'
-           step="1"
+          step='1'
           aria-invalid={!!errors.count}
           value={product?.rating?.count}
           onChange={handleCountInput}
@@ -143,12 +150,11 @@ console.log(product,'product')
         </span>
         <label>Category</label>
         <select
-          value={product?.category || ''}
+          value={product?.category || (data && data[0])}
           {...register('category')}
           onChange={(e) =>
             onChange({ ...product, category: (e.target as HTMLSelectElement).value })
           }>
-   
           {!isLoading &&
             data!.map((item) => (
               <option key={item} value={item}>

@@ -1,25 +1,30 @@
 import Loader from '../components/loader/Loader';
 import ProductForm from '../components/product-form/ProductForm';
 import { memo, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetProductByIdQuery, useUpdateProductMutation } from 'services/products/productsApi';
 import { Product } from 'types';
-
 
 const UpdateProduct = () => {
   const { id } = useParams();
   const { data, isLoading, error } = useGetProductByIdQuery(id || '1');
   const [updateProduct, result] = useUpdateProductMutation();
 
+  const [product, setProduct] = useState<Product>();
 
- 
-  const [product, setProduct] = useState<Partial<Product> | undefined>(data);
-  console.log(product);
-  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    setProduct(data);
-  }, [data]);
+    if (data) {
+      setProduct(data);
+    } else {
+      setProduct(location.state); // for get the local created product
+    }
+  }, []);
+
+  const navigate = useNavigate();
+
+
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -28,9 +33,11 @@ const UpdateProduct = () => {
   }, [result.isSuccess]);
 
   const update = () => {
-    updateProduct({ id: Number(id), ...product });
-  
-
+    console.log({ ...product }, 'product');
+    if(product){
+       updateProduct({  ...product,id: Number(id),});
+    }
+   
   };
 
   if (isLoading) {
@@ -44,7 +51,7 @@ const UpdateProduct = () => {
     <div>
       <h3>Update product ID-{id}</h3>
 
-      <ProductForm product={product} onChange={setProduct} submit={update} action='UPDATE' />
+     {product && <ProductForm product={product} onChange={setProduct} submit={update} action='UPDATE' />}
     </div>
   );
 };

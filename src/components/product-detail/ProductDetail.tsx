@@ -11,6 +11,7 @@ interface ProductDetailProps {
 const ProductDetail = (props: ProductDetailProps) => {
   const { product, onDelete } = props;
 
+
   return (
     <div className={style.ProductDetail}>
       <div className={style.ProductDetailImg}>
@@ -21,7 +22,7 @@ const ProductDetail = (props: ProductDetailProps) => {
         <h1>{product.title}</h1>
         <div className={style.Description}>
           <p>{product.description}</p>
-          <Rate allowHalf disabled defaultValue={product.rating?.rate} />({product.rating?.rate})
+          <Rate allowHalf disabled defaultValue={product.rating?.rate} />({product.rating?.rate || 0})
         </div>
         <div className={style.Price}>
           <h4>${product.price}</h4>
@@ -29,7 +30,7 @@ const ProductDetail = (props: ProductDetailProps) => {
         </div>
         <div className={style.ProductBtns}>
           <Button size={'large'} type='primary'>
-            <Link to={`/update-product/${product.id}`}>Update</Link>
+            <Link to={`/update-product/${product.id}`} state={product}>Update</Link>
           </Button>
           <Button size={'large'} danger onClick={onDelete}>
             Delete

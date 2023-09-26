@@ -12,6 +12,7 @@ const Products = () => {
     return <Loader/>;
   }
 
+  console.log(data)
   if (error) {
     return <div>Error: Failed to load</div>;
   }
