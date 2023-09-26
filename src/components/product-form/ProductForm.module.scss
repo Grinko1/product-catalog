@@ -4,7 +4,6 @@
   justify-content: center;
   flex-direction: column;
   gap: 5px;
-
   margin: 150px auto;
   box-shadow: 0 0 10px rgba(200, 196, 196, 0.5);
   width: 400px;
@@ -50,5 +49,17 @@
     border: none;
     border-radius: 10px;
     color: #fff;
+  }
+}
+@media(max-width:400px){
+  .ProductForm {
+  width: 100%;
+  margin: 50px auto;
+  input{
+    width: 90%;
+  }
+  select{
+    width: 90%;
+  }
   }
 }

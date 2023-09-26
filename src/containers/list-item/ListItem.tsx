@@ -15,7 +15,7 @@ const ProductItem = (props: ProductItemProps) => {
       <img src={product.image} alt='' />
       <div className={style.ProductDesc}>
         <p className={style.Title}>{product.title}</p>
-        <div>
+        <div className={style.Bottom}>
           <Rate allowHalf disabled defaultValue={product.rating?.rate} />
           <span className={style.Price}>${product.price}</span>
         </div>

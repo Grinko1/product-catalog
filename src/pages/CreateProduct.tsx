@@ -13,7 +13,7 @@ const CreateProduct = () => {
     id: uniqId(),
     title: '',
     description: '',
-    price: 1,
+    price: null,
     image: '',
     category: '',
     rating: {

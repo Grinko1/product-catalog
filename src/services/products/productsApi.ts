@@ -21,7 +21,6 @@ export const productsApi = createApi({
         body: data,
       }),
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        console.log(args)
         try {
           const { data: updatedProduct } = await queryFulfilled;
           const id = args!.id!.toString()
@@ -33,7 +32,7 @@ export const productsApi = createApi({
           );
           dispatch(
             productsApi.util.updateQueryData('getAllProducts', null, (draft) => {
-              console.log(updatedProduct, 'updatedProduct');
+           
               return draft.map((item) => {
                 if (item.id === args.id) {
                   return args;

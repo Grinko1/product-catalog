@@ -46,3 +46,34 @@
     }
   }
 }
+@media (max-width: 800px) {
+  .ProductDetail {
+    flex-direction: column;
+    gap: 10px;
+
+    .ProductDetailImg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ProductDetailInfo {
+      margin-top: 30px;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .ProductDetail {
+    .ProductDetailImg {
+      img {
+        width: 300px;
+        height: 350px;
+      }
+    }
+
+    .ProductDetailInfo {
+      margin-top: 10px;
+    }
+  }
+}

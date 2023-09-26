@@ -51,15 +51,12 @@ const ProductForm = (props: ProductFormProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fieldName = e.target.name as keyof IFormInput;
     const fieldValue = e.target.value;
-
     const fieldError = errors[fieldName]?.message || '';
     onChange({ ...product, [fieldName]: fieldValue });
   };
 
   const changePriceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    // const numericValue = inputValue.replace(/^\d*\,?\d*$/, '');
-    // onChange({ ...product, price: Number(numericValue) });
     onChange({ ...product, price: Number(inputValue) });
   };
   const handleCountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +125,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Price'
           step='0.01'
           aria-invalid={!!errors.price}
-          value={product?.price}
+          value={product?.price ? product?.price :''}
           onChange={changePriceInput}
         />
         <span className={style.FormError} role='alert'>
@@ -142,7 +139,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Count'
           step='1'
           aria-invalid={!!errors.count}
-          value={product?.rating?.count}
+          value={product?.rating?.count ?product?.rating?.count  : '' }
           onChange={handleCountInput}
         />
         <span className={style.FormError} role='alert'>
