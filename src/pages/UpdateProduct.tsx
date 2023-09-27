@@ -20,24 +20,20 @@ const UpdateProduct = () => {
     } else {
       setProduct(location.state as Product); // for get the local created product
     }
-  }, []);
+  }, [data]);
 
   const navigate = useNavigate();
 
-// console.log(product, location.state)
-
   useEffect(() => {
     if (result.isSuccess) {
-      navigate(`/product/${id}` ,{state:product});
+      navigate(`/product/${id}`, { state: product });
     }
   }, [result.isSuccess]);
 
   const update = () => {
-    console.log({ ...product }, 'product');
-    if(product){
-       updateProduct({  ...product,id: Number(id),});
+    if (product) {
+      updateProduct({ ...product, id: Number(id) });
     }
-   
   };
 
   if (isLoading) {
@@ -50,8 +46,9 @@ const UpdateProduct = () => {
   return (
     <div>
       <h3>Update product ID-{id}</h3>
-
-     {product && <ProductForm product={product} onChange={setProduct} submit={update} action='UPDATE' />}
+      {product && (
+        <ProductForm product={product} onChange={setProduct} submit={update} action='UPDATE' />
+      )}
     </div>
   );
 };

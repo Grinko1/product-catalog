@@ -3,6 +3,7 @@
   width: 80%;
   margin: 50px auto;
   gap: 50px;
+
   .ProductDetailImg {
     img {
       width: 400px;
@@ -17,7 +18,9 @@
     height: 500px;
     margin-top: 150px;
     gap: 20px;
+    max-width: 40vw;
     .Description {
+      overflow-wrap: break-word;
       p {
         margin: 10px 0;
       }
@@ -25,6 +28,8 @@
 
     h1 {
       text-align: center;
+          text-wrap: wrap;
+            overflow-wrap: break-word;
     }
     span {
       font-size: 12px;
@@ -50,6 +55,8 @@
   .ProductDetail {
     flex-direction: column;
     gap: 10px;
+    margin: auto;
+   
 
     .ProductDetailImg {
       display: flex;
@@ -59,6 +66,7 @@
 
     .ProductDetailInfo {
       margin-top: 30px;
+      max-width: 90vw;
     }
   }
 }

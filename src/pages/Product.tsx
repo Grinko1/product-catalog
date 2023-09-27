@@ -5,12 +5,11 @@ import { Product } from 'types';
 import { useDeletePostMutation, useGetProductByIdQuery } from '../services/products/productsApi';
 import Loader from '../components/loader/Loader';
 
-
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetProductByIdQuery(id || '1');
-  const [product, setProduct] = useState<Product >();
+  const [product, setProduct] = useState<Product>();
   const location = useLocation();
 
   useEffect(() => {
@@ -19,7 +18,7 @@ const Product = () => {
     } else {
       setProduct(location.state); // for get the local created product
     }
-  }, []);
+  }, [data]);
 
   const [deletePost, result] = useDeletePostMutation();
 

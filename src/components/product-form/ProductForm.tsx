@@ -128,7 +128,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Price'
           step='0.01'
           aria-invalid={!!errors.price}
-          value={product?.price ? product?.price : ''}
+          value={ product?.price || ''}
           onChange={changePriceInput}
         />
         <span className={style.FormError} role='alert'>
@@ -142,7 +142,7 @@ const ProductForm = (props: ProductFormProps) => {
           placeholder='Count'
           step='1'
           aria-invalid={!!errors.count}
-          value={product?.rating?.count ? product?.rating?.count : ''}
+          value={ product?.rating?.count || ''}
           onChange={handleCountInput}
         />
         <span className={style.FormError} role='alert'>

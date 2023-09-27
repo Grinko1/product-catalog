@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import { memo, useCallback } from 'react';
@@ -10,6 +10,7 @@ interface PrivateLayoutProps {
 const PrivateLayout = ({}: PrivateLayoutProps) => {
   const {isAuth, loading} = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const location = useLocation()
   const logoutHandler = useCallback(() => {
     dispatch(logout());
   }, []);
@@ -17,7 +18,7 @@ const PrivateLayout = ({}: PrivateLayoutProps) => {
   return (
     <div>
       <Header isAuth={isAuth} logout={logoutHandler} />
-      { (isAuth === true && loading===false)  ? <Outlet /> : <Navigate to='/login' /> }
+      { (isAuth === true && loading===false)  ? <Outlet /> : <Navigate to='/login' state={location.pathname} /> }
     </div>
   );
 };

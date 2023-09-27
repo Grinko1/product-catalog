@@ -2,7 +2,7 @@ import { useLoginMutation } from 'services/auth/authApi';
 import LoginForm from '../components/login-form/LoginForm';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { AuthData } from 'types';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import { checkAuth } from 'features/user/authSlice';
 
@@ -10,6 +10,7 @@ const Login = () => {
   const [userData, setUserData] = useState<AuthData>({ username: 'mor_2314', password: '83r5^_' });
   const isAuth = useAppSelector((state) => state.auth.isAuth);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -17,7 +18,7 @@ const Login = () => {
   }, []);
   useEffect(() => {
     if (isAuth) {
-      navigate('/');
+      navigate(location.state || '/');
     }
   }, [isAuth]);
   const [error, setError] = useState('');
